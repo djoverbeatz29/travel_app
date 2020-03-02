@@ -2,11 +2,12 @@ class User < ActiveRecord::Base
     has_many :trips
     has_many :destinations, through: :trips
 
-    def add_trip(destination, depart_date, return_date)
+    def add_trip(destination, depart_date, return_date, visited = false)
         Trip.create(destination: destination,
         user: self,
         depart_date: depart_date,
-        return_date: return_date)
+        return_date: return_date,
+        visited?: visited)
     end
 
     def delete_trip(trip)
