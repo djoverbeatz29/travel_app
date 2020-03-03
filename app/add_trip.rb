@@ -38,7 +38,7 @@ def add_trip(user)
 
     user.add_trip(destination, depart_date, return_date)
     puts "Great! You'll be heading to #{destination.name} on #{depart_date.strftime("%F")} and returning on #{return_date.strftime("%F")}."
-    puts "Your confirmation email should be arriving shortly at #{user.name.downcase.gsub(' ', '')}96@iluvween.com.\n"
+    puts "Your confirmation email should be arriving shortly at #{user.name.downcase.gsub(' ', '')}#{user.id}@gmail.com.\n"
     resp = prompt.select("Options", ["Back", "Exit"])
     if resp == "Back"
         add_trip(user)
