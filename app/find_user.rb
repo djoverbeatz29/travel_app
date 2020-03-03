@@ -13,7 +13,7 @@ def find_user(user)
                     myuser.trips.each { |tr|
                         puts "Trip ID: #{tr.id}"
                         puts "Destination: #{tr.destination.name}"
-                        puts "Duration: #{tr.depart_date.to_s.split(' ')[0]} - #{tr.return_date.to_s.split(' ')[0]}"
+                        puts "Duration: #{tr.depart_date.strftime("%F")} - #{tr.return_date.strftime("%F")}"
                         puts
                     }
                 else
