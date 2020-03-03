@@ -88,24 +88,15 @@ end
 def edit_trip(trip)
     # OPTIONS: change depart date, change return date, toggle visited status
     system "clear"
-    visited_menu_option = change_visited_status_menu_option(trip)
     prompt = prompt_instance
-    user_input = prompt.select("Select which date to edit", ["Departure date", "Return date", "Move to #{visited_menu_option}", "Back"])
+    user_input = prompt.select("Select which date to edit", ["Departure date", "Return date", "Move to completed trips", "Back"])
     case user_input
     when "Departure date"
         edit_departure_date(trip)
     when "Return date"
         edit_return_date(trip)
-    when "Move to #{visited_menu_option}"
+    when "Move to completed trips"
         change_visited(trip)
-    end
-end
-
-def change_visited_status_menu_option(trip)
-    if trip.visited? == true
-        "wishlist"
-    else
-        "completed trips"
     end
 end
 
@@ -143,40 +134,40 @@ def choose_date_departure(trip)
     if year == min_year && year == max_year
         if min_month == max_month
             month = min_month
-            day = prompt.slider("Day", min: min_day, max: max_day, step: 1, default: min_day)
+            day = prompt.slider("Day", min: min_day, max: max_day, step: 1)
         else
-            month = prompt.slider("Month", min: min_month, max: max_month, step: 1, default: min_month)
+            month = prompt.slider("Month", min: min_month, max: max_month, step: 1)
             if month == min_month
                 max_day = max_day_for_month(month, year)
-                day = prompt.slider("Day", min: min_day, max: max_day, step: 1, default: min_day)
+                day = prompt.slider("Day", min: min_day, max: max_day, step: 1)
             elsif month == max_month
-                day = prompt.slider("Day", min: min_day, max: max_day, step: 1, default: min_day)
+                day = prompt.slider("Day", min: min_day, max: max_day, step: 1)
             else
                 max_day = max_day_for_month(month, year)
-                day = prompt.slider("Day", min: 1, max: max_day, step: 1, default: 1)
+                day = prompt.slider("Day", min: 1, max: max_day, step: 1)
             end
         end
     elsif year == min_year
-        month = prompt.slider("Month", min: min_month, max: 12, step: 1, default: min_month)
+        month = prompt.slider("Month", min: min_month, max: 12, step: 1)
         if month == min_month
             max_day = max_day_for_month(month, year)
-            day = prompt.slider("Day", min: min_day, max: max_day, step: 1, default: min_day)
+            day = prompt.slider("Day", min: min_day, max: max_day, step: 1)
         else
             max_day = max_day_for_month(month, year)
-            day = prompt.slider("Day", min: 1, max: max_day, step: 1, default: 1)
+            day = prompt.slider("Day", min: 1, max: max_day, step: 1)
         end
     elsif year == max_year
-        month = prompt.slider("Month", min: 1, max: max_month, step: 1, default: 1)
+        month = prompt.slider("Month", min: 1, max: max_month, step: 1)
         if month == max_month
-            day = prompt.slider("Day", min: 1, max: max_day, step: 1, default: 1)
+            day = prompt.slider("Day", min: 1, max: max_day, step: 1)
         else
             max_day = max_day_for_month(month, year)
-            day = prompt.slider("Day", min: 1, max: max_day, step: 1, default: 1)
+            day = prompt.slider("Day", min: 1, max: max_day, step: 1)
         end
     else
-        month = prompt.slider("Month", min: 1, max: 12, step: 1, default: 1)
+        month = prompt.slider("Month", min: 1, max: 12, step: 1)
         max_day = max_day_for_month(month, year)
-        day = prompt.slider("Day", min: 1, max: max_day, step: 1, default: 1)
+        day = prompt.slider("Day", min: 1, max: max_day, step: 1)
     end
     Time.new(year.to_i, month.to_i, day.to_i)
 end
@@ -188,18 +179,18 @@ def choose_date_return(trip)
     min_year = trip.depart_date.year
     year = prompt.slider("Year", min: min_year, max: (min_year + 10), step: 1, default: min_year)
     if year == min_year
-        month = prompt.slider("Month", min: min_month, max: 12, step: 1, default: min_month)
+        month = prompt.slider("Month", min: min_month, max: 12, step: 1)
         if month == min_month
             max_day = max_day_for_month(month, year)
-            day = prompt.slider("Day", min: min_day, max: max_day, step: 1, default: min_day)
+            day = prompt.slider("Day", min: min_day, max: max_day, step: 1)
         else
             max_day = max_day_for_month(month, year)
-            day = prompt.slider("Day", min: 1, max: max_day, step: 1, default: 1)
+            day = prompt.slider("Day", min: 1, max: max_day, step: 1)
         end
     else
-        month = prompt.slider("Month", min: 1, max: 12, step: 1, default: 1)
+        month = prompt.slider("Month", min: 1, max: 12, step: 1)
         max_day = max_day_for_month(month, year)
-        day = prompt.slider("Day", min: 1, max: max_day, step: 1, default: 1)
+        day = prompt.slider("Day", min: 1, max: max_day, step: 1)
     end
     Time.new(year.to_i, month.to_i, day.to_i)
 end
@@ -211,7 +202,7 @@ def max_day_for_month(month, year)
         else
             29
         end
-    elsif month == 4 || month == 6 || month == 9 || month == 11
+    elsif [4, 6, 9, 11].include?(month) == true
         return 30
     else
         return 31
