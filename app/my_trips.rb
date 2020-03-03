@@ -62,11 +62,17 @@ def trip_menu(user, trip)
     prompt.say("Destination: #{trip.destination.name_with_country}")
     prompt.say("Departure date: #{trip.depart_date.to_s.split(" ").first}")
     prompt.say("Return date: #{trip.return_date.to_s.split(" ").first}")
-    trip_menu_options = remove_edit_option_for_completed_trip(trip)
+    trip_menu_options = determine_menu_options(trip)
     user_input = prompt.select("Select", trip_menu_options)
     case user_input
     when "Find other users who have been here"
         find_other_users(trip.destination, user)
+    when "Review an existing site"
+        browse_sites(user, trip)
+    when "Add site for this destination"
+        add_site(user, trip.destination)
+    when "Browse sites and reviews"
+        browse_sites(user, trip)
     when "Edit"
         edit_trip(trip)
     when "Delete"
@@ -77,12 +83,74 @@ def trip_menu(user, trip)
     trip_menu(user, trip)
 end
 
-def remove_edit_option_for_completed_trip(trip)
+def determine_menu_options(trip)
     if trip.visited? == true
-        ["Find other users who have been here", "Delete", "Back"]
+        ["Find other users who have been here", "Review an existing site", "Add site for this destination", "Delete", "Back"]
     else
-        ["Find other users who have been here", "Edit", "Delete", "Back"]
+        ["Find other users who have been here", "Browse sites and reviews", "Edit", "Delete", "Back"]
     end
+end
+
+def add_site(user, destination)
+    prompt = prompt_instance
+    site_name = prompt.ask("What is the name of the site?")
+    new_site = Site.create(name: site_name, destination: destination)
+    user_input = prompt.select("Would you like to add a review for this site?", ["Yes", "No"])
+    if user_input == "Yes"
+        add_site_review(user, new_site)
+    end
+end
+
+def browse_sites(user, trip)
+    destination_sites = Site.where(destination: trip.destination)
+    site_names = destination_sites.map{|site| site.name}
+    site_names << "Back"
+    browse_site_prompt = determine_browse_site_prompt(trip)
+    prompt = prompt_instance
+    user_input = prompt.select(browse_site_prompt, site_names)
+    if user_input == "Back"
+        return
+    end
+    selected_site = Site.find_by(name: user_input)
+    if trip.visited? == true
+        add_site_review(user, selected_site)
+    else
+        view_site_reviews(selected_site)
+    end
+    browse_sites(user, trip)
+end
+
+def determine_browse_site_prompt(trip)
+    if trip.visited? == true
+        "Select a site to add a review"
+    else
+        "Select a site to see reviews"
+    end
+end
+
+def add_site_review(user, selected_site)
+    prompt = prompt_instance
+    rating = prompt.slider("Rating", max: 10, step: 1)
+    user_input = prompt.select("Would you like to leave a comment?", ["Yes", "No"])
+    if user_input == "Yes"
+        comment = prompt.ask("Enter your comment")
+        user.leave_review(selected_site, rating, comment)
+    else
+        user.leave_review(selected_site, rating)
+    end
+end
+
+def view_site_reviews(selected_site)
+    prompt = prompt_instance
+    selected_site.reviews.each do |review|
+        prompt.say("User: #{review.user.name}")
+        prompt.say("Rating: #{review.rating}")
+        if review.content
+            prompt.say("Review: #{review.content}")
+        end
+        prompt.say("\n")
+    end
+    prompt.select("Press Enter to go back to list of sites", ["Back"])
 end
 
 def edit_trip(trip)
