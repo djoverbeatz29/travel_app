@@ -76,15 +76,24 @@ end
 
 def edit_trip(trip)
     # OPTIONS: change depart date, change return date, toggle visited status
+    visited_menu_option = change_visited_status_menu_option(trip)
     prompt = prompt_instance
-    user_input = prompt.select("Select which date to edit", ["Departure date", "Return date", "Change visited status", "Back"])
+    user_input = prompt.select("Select which date to edit", ["Departure date", "Return date", "Move to #{visited_menu_option}", "Back"])
     case user_input
     when "Departure date"
         edit_departure_date(trip)
     when "Return date"
         edit_return_date(trip)
-    when "Change visited status"
+    when "Move to #{visited_menu_option}"
         change_visited(trip)
+    end
+end
+
+def change_visited_status_menu_option(trip)
+    if trip.visited? == true
+        "wishlist"
+    else
+        "completed trips"
     end
 end
 
@@ -160,13 +169,3 @@ def change_visited(trip)
         trip.update(visited?: true)
     end
 end
-
-jack = User.all[0]
-
-mike = User.all[1]
-
-# d = Destination.where(id: 751).first
-# t = mike.add_trip(d, nil, nil)
-# t.update(visited?: false)
-
-my_trips(mike)
