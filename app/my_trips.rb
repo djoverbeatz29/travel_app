@@ -24,32 +24,32 @@ end
 
 # menu of user's completed trips
 def completed_trips(user)
-    trip_destination_names = user.visited_destination_names
-    trip_destination_names << "Back"
+    trip_destination_names_and_ids = user.visited_destinations_name_and_trip_id
+    trip_destination_names_and_ids << "Back"
     prompt = prompt_instance
     prompt.say("Completed Trips")
-    user_input = prompt.select("Select a trip to view", trip_destination_names)
+    user_input = prompt.select("Select a trip to view", trip_destination_names_and_ids)
     if user_input == "Back"
         return
     end
-    city_name = user_input.split(", ")[0]
-    trip = user.visited_trips.find {|t| t.destination.name == city_name}
+    trip_id = user_input.split(" - ")[1].to_i
+    trip = user.visited_trips.find {|t| t.id == trip_id}
     trip_menu(user, trip)
     completed_trips(user)
 end
 
 # menu of user's wishlist
 def wishlist(user)
-    trip_destination_names = user.pending_destination_names
-    trip_destination_names << "Back"
+    trip_destination_names_and_ids = user.pending_destinations_name_and_trip_id
+    trip_destination_names_and_ids << "Back"
     prompt = prompt_instance
     prompt.say("Trip Wishlist")
-    user_input = prompt.select("Select a trip to view", trip_destination_names)
+    user_input = prompt.select("Select a trip to view", trip_destination_names_and_ids)
     if user_input == "Back"
         return
     end
-    city_name = user_input.split(", ")[0]
-    trip = user.pending_trips.find {|t| t.destination.name == city_name}
+    trip_id = user_input.split(" - ")[1].to_i
+    trip = user.pending_trips.find {|t| t.id == trip_id}
     trip_menu(user, trip)
     wishlist(user)
 end
@@ -169,3 +169,7 @@ def change_visited(trip)
         trip.update(visited?: true)
     end
 end
+
+jack = User.all.first
+
+my_trips(jack)

@@ -21,20 +21,11 @@ class User < ActiveRecord::Base
         self.trips.where(visited?: false)
     end
 
-    def visited_destinations
-        self.trips.where(visited?: true).map { |trip| trip.destination }
+    def visited_destinations_name_and_trip_id
+        self.trips.where(visited?: true).map {|trip| "#{trip.destination.name_with_country} - #{trip.id}"}
     end
 
-    def pending_destinations
-        self.trips.where(visited?: false).map { |trip| trip.destination }
+    def pending_destinations_name_and_trip_id
+        self.trips.where(visited?: false).map {|trip| "#{trip.destination.name_with_country} - #{trip.id}"}
     end
-
-    def visited_destination_names #with country
-        self.visited_destinations.map { |dest| dest.name_with_country }
-    end
-
-    def pending_destination_names #with country
-        self.pending_destinations.map { |dest| dest.name_with_country }
-    end
-
 end
