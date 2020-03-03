@@ -10,13 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 3) do
+ActiveRecord::Schema.define(version: 5) do
 
   create_table "destinations", force: :cascade do |t|
     t.string "country"
     t.integer "geonameid"
     t.string "name"
     t.string "subcountry"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.text "content"
+    t.integer "rating"
+    t.integer "user_id"
+    t.integer "site_id"
+  end
+
+  create_table "sites", force: :cascade do |t|
+    t.string "name"
+    t.integer "destination_id"
   end
 
   create_table "trips", force: :cascade do |t|

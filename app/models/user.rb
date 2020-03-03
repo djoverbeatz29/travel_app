@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
     has_many :trips
     has_many :destinations, through: :trips
+    has_many :reviews
+    has_many :sites, through: :reviews
 
     def add_trip(destination, depart_date, return_date, visited = false)
         Trip.create(destination: destination,
@@ -29,4 +31,13 @@ class User < ActiveRecord::Base
     def pending_destinations_name_and_trip_id
         self.trips.where(visited?: false).map {|trip| "#{trip.destination.name_with_country} - #{trip.id}"}
     end
+
+    def leave_review(site, rating, content = nil)
+        Review.create({rating: rating,
+            content: content,
+            user: self,
+            site: site
+        })
+    end
+    
 end
