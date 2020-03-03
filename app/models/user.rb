@@ -14,12 +14,19 @@ class User < ActiveRecord::Base
         Trip.destroy(trip.id)
     end
 
-    def visited_destinations
-        self.trips.where(visited?: true).map { |trip| trip.destination }
+    def visited_trips
+        self.trips.where(visited?: true)
     end
 
-    def pending_destinations
-        self.trips.where(visited?: false).map { |trip| trip.destination }
+    def pending_trips
+        self.trips.where(visited?: false)
     end
 
+    def visited_destinations_name_and_trip_id
+        self.trips.where(visited?: true).map {|trip| "#{trip.destination.name_with_country} - #{trip.id}"}
+    end
+
+    def pending_destinations_name_and_trip_id
+        self.trips.where(visited?: false).map {|trip| "#{trip.destination.name_with_country} - #{trip.id}"}
+    end
 end
