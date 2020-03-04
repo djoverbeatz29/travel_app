@@ -1,9 +1,11 @@
 def add_trip(user)
+    system "clear"
     @now = Time.now
 
     prompt = TTY::Prompt.new
     resp = prompt.select("Search by city or country, or click Exit to return to Main Menu", ["By City", "By Country", "Exit"])
     if resp == "By City"
+        system "clear"
         while resp = prompt.ask("Enter the name of the city you wish to visit: ")
             if Destination.find_by(name: resp)
                 destination = Destination.find_by(name: resp)
@@ -14,8 +16,10 @@ def add_trip(user)
         end
 
     elsif resp == "By Country"
+        system "clear"
         nations = Destination.all.map { |d| d.country }.uniq
         char = prompt.select("Please select the first letter of the country you seek.", (65...65+26).map { |i| i.chr })
+        system "clear"
         nat = prompt.select("Choose your country.", nations.find_all { |n| n[0] == char })
         sub = prompt.select("Now choose your subcountry.", Destination.where(country: nat).map{ |c| c.subcountry }.uniq)
         city = prompt.select("Finally, choose your city.", Destination.where(country: nat, subcountry: sub).map{ |c| c.name }.uniq)
@@ -39,8 +43,8 @@ def add_trip(user)
     user.add_trip(destination, depart_date, return_date)
     puts "Great! You'll be heading to #{destination.name} on #{depart_date.strftime("%F")} and returning on #{return_date.strftime("%F")}."
     puts "Your confirmation email should be arriving shortly at #{user.name.downcase.gsub(' ', '')}#{user.id}@gmail.com.\n"
-    resp = prompt.select("Options", ["Back", "Exit"])
-    if resp == "Back"
+    resp = prompt.select("Options", ["Add another trip", "Exit"])
+    if resp == "Add another trip"
         add_trip(user)
     else
         return

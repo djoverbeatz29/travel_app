@@ -41,5 +41,11 @@ class User < ActiveRecord::Base
         self.reviews << review
         review
     end
+
+    def delete_review(review)
+        review = Review.destroy(review.id)
+        self.reviews.delete(review)
+        review
+    end
     
 end
