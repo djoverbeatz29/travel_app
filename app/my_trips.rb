@@ -218,7 +218,7 @@ def choose_date_departure(trip)
                 max_day = max_day_for_month(month, year)
                 day = prompt.slider("Day", min: min_day, max: max_day, step: 1)
             elsif month == max_month
-                day = prompt.slider("Day", min: min_day, max: max_day, step: 1)
+                day = prompt.slider("Day", min: 1, max: max_day, step: 1)
             else
                 max_day = max_day_for_month(month, year)
                 day = prompt.slider("Day", min: 1, max: max_day, step: 1)
