@@ -33,11 +33,13 @@ class User < ActiveRecord::Base
     end
 
     def leave_review(site, rating, content = nil)
-        Review.create({rating: rating,
+        review = Review.create({rating: rating,
             content: content,
             user: self,
             site: site
         })
+        self.reviews << review
+        review
     end
     
 end
