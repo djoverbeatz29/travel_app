@@ -5,7 +5,7 @@ def change_password(user)
         case resp
         when user.password
             puts "Correct!"
-            while new_password = prompt.ask("Please enter your new password, or enter 'cancel' to go back to Main Menu.")
+            while new_password = prompt.mask("Please enter your new password, or enter 'cancel' to go back to Main Menu.")
                 if new_password == 'cancel'
                     return
                 else
@@ -13,7 +13,7 @@ def change_password(user)
                     case resp
                     when new_password
                         user.update(password: new_password)
-                        prompt.select("You have successfully changed your password to #{new_password}.", ["Back"])
+                        prompt.select("You have successfully changed your password.", ["Back"])
                         return
                     else
                         puts "Incorrect. Try again"
