@@ -24,15 +24,15 @@ end
 # menu of user's completed trips
 def completed_trips(user)
     system "clear"
-    trip_destination_names_and_ids = user.visited_destinations_name_and_trip_id
-    trip_destination_names_and_ids << "Back"
+    trip_destination_names_and_ids_arr = user.visited_destinations_name_and_trip_id
+    trip_destination_names = convert_array_of_arrays_to_hash(trip_destination_names_and_ids_arr)
+    trip_destination_names["Back"] = "Back"
     prompt = prompt_instance
     prompt.say("Completed Trips")
-    user_input = prompt.select("Select a trip to view", trip_destination_names_and_ids)
-    if user_input == "Back"
+    trip_id = prompt.select("Select a trip to view", trip_destination_names)
+    if trip_id == "Back"
         return
     end
-    trip_id = user_input.split(" - ")[1].to_i
     trip = user.visited_trips.find {|t| t.id == trip_id}
     trip_menu(user, trip)
     completed_trips(user)
@@ -41,18 +41,24 @@ end
 # menu of user's wishlist
 def wishlist(user)
     system "clear"
-    trip_destination_names_and_ids = user.pending_destinations_name_and_trip_id
-    trip_destination_names_and_ids << "Back"
+    trip_destination_names_and_ids_arr = user.pending_destinations_name_and_trip_id
+    trip_destination_names = convert_array_of_arrays_to_hash(trip_destination_names_and_ids_arr)
+    trip_destination_names["Back"] = "Back"
     prompt = prompt_instance
     prompt.say("Trip Wishlist")
-    user_input = prompt.select("Select a trip to view", trip_destination_names_and_ids)
-    if user_input == "Back"
+    trip_id = prompt.select("Select a trip to view", trip_destination_names)
+    if trip_id == "Back"
         return
     end
-    trip_id = user_input.split(" - ")[1].to_i
     trip = user.pending_trips.find {|t| t.id == trip_id}
     trip_menu(user, trip)
     wishlist(user)
+end
+
+def convert_array_of_arrays_to_hash(a_of_a)
+    hash = {}
+    a_of_a.each {|arr| hash[arr[0]] = arr[1]}
+    hash
 end
 
 # trip menu: edit, delete, find other user's who have been here
@@ -291,15 +297,26 @@ def find_other_users(trip_destination, user)
     prompt = prompt_instance
     other_trips = Trip.where(destination: trip_destination, visited?: true)
     other_trips_without_current_user = other_trips.reject {|trip| trip.user == user}
-    other_users = other_trips_without_current_user.collect {|trip| trip.user.name}.uniq
-    if other_users.empty? == true
-        prompt.say("No other users have visited this destination")
+    other_users_arr = other_trips_without_current_user.collect {|trip| [trip.user.name, trip.user.id]}.uniq
+    if other_users_arr.empty? == true
+        prompt.select("No other users have visited this destination", ["Back"])
     else
-        other_users.each do |name|
-            prompt.ok(name)
+        user_with_id_hash = convert_array_of_arrays_to_hash(other_users_arr)
+        user_with_id_hash["Back"] = "Back"
+        selected_user_id = prompt.select("Select a user to see their reviews", user_with_id_hash)
+        if selected_user_id == "Back"
+            return
         end
+        see_user_reviews(selected_user_id)
+        find_other_users(trip_destination, user)
     end
-    prompt.select("Press Enter to go back", ["Back"])
+end
+
+def see_user_reviews(selected_user_id)
+    # Site Name
+    # Rating
+    # Content
+    
 end
 
 def change_visited(trip)
