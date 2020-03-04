@@ -9,8 +9,9 @@ def login
     when "Exit"
         return
     when "Login"
-        name = prompt.ask("Enter your name: ")
-        user = User.where(name: name).first
+        username = prompt.ask("Enter your username: ")
+        password = prompt.mask("Enter your password: ")
+        user = User.where(username: username, password: password).first
         if user
             main_menu(user)
         else
