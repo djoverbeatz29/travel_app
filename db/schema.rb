@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 6) do
+ActiveRecord::Schema.define(version: 7) do
 
   create_table "destinations", force: :cascade do |t|
     t.string "country"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 6) do
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.text "username"
+    t.text "password"
   end
 
 end

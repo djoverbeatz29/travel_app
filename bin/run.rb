@@ -17,7 +17,7 @@ def login
         end
     when "Create Account"
         name = prompt.ask("Enter your name: ")
-        user = User.create(name: name, username: make_username(name))
+        user = User.create(name: name, username: make_username(name), password: "Password")
         main_menu(user)
     end
     login
@@ -26,7 +26,7 @@ end
 def main_menu(user)
     system "clear"
     prompt = TTY::Prompt.new
-    input = prompt.select("Main Menu", ["Add Trip", "My Trips", "My Reviews", "Find User", "Log Out"])
+    input = prompt.select("Main Menu", ["Add Trip", "My Trips", "My Reviews", "Find User", "Log Out", "Change Password", "Delete Account"])
 
     case input
     when "Add Trip"
@@ -38,6 +38,11 @@ def main_menu(user)
     when "Find User"
         find_user(user)
     when "Log Out"
+        return
+    when "Change Password"
+        change_password(user)
+    when "Delete Account"
+        delete_account(user)
         return
     end
     main_menu(user)
