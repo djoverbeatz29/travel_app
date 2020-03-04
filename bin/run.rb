@@ -20,6 +20,9 @@ def login
     when "Create Account"
         name = prompt.ask("Enter your name: ")
         user = User.create(name: name, username: make_username(name), password: "Password")
+        prompt.say("Your username: #{user.username}")
+        prompt.say("Your password: Password")
+        prompt.select("You can change your password from the Main Menu", ["Continue"])
         main_menu(user)
     end
     login
