@@ -25,11 +25,11 @@ class User < ActiveRecord::Base
     end
 
     def visited_destinations_name_and_trip_id
-        self.trips.where(visited?: true).map {|trip| "#{trip.destination.name_with_country} - #{trip.id}"}
+        self.trips.where(visited?: true).map {|trip| [trip.destination.name_with_country, trip.id]}
     end
 
     def pending_destinations_name_and_trip_id
-        self.trips.where(visited?: false).map {|trip| "#{trip.destination.name_with_country} - #{trip.id}"}
+        self.trips.where(visited?: false).map {|trip| [trip.destination.name_with_country, trip.id]}
     end
 
     def leave_review(site, rating, content = nil)
