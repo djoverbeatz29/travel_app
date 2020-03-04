@@ -7,19 +7,30 @@ def find_user(user)
         else
             myuser = User.find_by(name: username)
             if myuser
-                if myuser.trips.length > 0
-                    print "Here are #{username}'s trips:\n\n"
+                resp = prompt.select("#{myuser.name} Menu", ["Reviews", "Trips", "Back"])
+                if resp == "Reviews"
+                    if myuser.reviews.length > 0
+                        print "Here are #{username}'s reviews:\n\n"
+                        myuser.reviews.each { |rev| print "Site: #{rev.site.name}\nRating: #{rev.rating} - #{rev.content }\n\n" }
+                    else
+                        puts "#{username} has no reviews... yet!"
+                    end
+                elsif resp == "Trips"
+                    if myuser.trips.length > 0
+                        print "Here are #{username}'s trips:\n\n"
 
-                    myuser.trips.each { |tr|
-                        puts "Trip ID: #{tr.id}"
-                        puts "Destination: #{tr.destination.name}, #{tr.destination.country}"
-                        puts "Duration: #{tr.depart_date.strftime("%F")} - #{tr.return_date.strftime("%F")}"
-                        puts
-                    }
+                        myuser.trips.each { |tr|
+                            puts "Trip ID: #{tr.id}"
+                            puts "Destination: #{tr.destination.name}, #{tr.destination.country}"
+                            puts "Duration: #{tr.depart_date.strftime("%F")} - #{tr.return_date.strftime("%F")}"
+                            puts
+                        }
+                    else
+                        puts "#{username} has no trips... yet!"
+                    end
                 else
-                    puts "#{username} has no trips... yet!"
+                    find_user(user)
                 end
-                break
             else
                 puts "We couldn't find this user in our database. Please try again."
             end
