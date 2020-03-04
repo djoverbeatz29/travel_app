@@ -307,16 +307,31 @@ def find_other_users(trip_destination, user)
         if selected_user_id == "Back"
             return
         end
-        see_user_reviews(selected_user_id)
+        see_user_reviews(trip_destination, selected_user_id)
         find_other_users(trip_destination, user)
     end
 end
 
-def see_user_reviews(selected_user_id)
+def see_user_reviews(trip_destination, selected_user_id)
     # Site Name
     # Rating
     # Content
-    
+    prompt = prompt_instance
+    user = User.find(selected_user_id)
+    reviews = user.reviews.select {|review| review.site.destination == trip_destination}
+    if reviews.empty? == true
+        prompt.say("This user has not reviewed any sites for this destination")
+    else
+        reviews.each do |rev|
+            prompt.say("Site: #{rev.site.name}")
+            prompt.say("Rating: #{rev.rating}")
+            if rev.content
+                prompt.say("Content: #{rev.content}")
+            end
+            prompt.say("\n")
+        end
+    end
+    prompt.select("Press Enter to go back", ["Back"])
 end
 
 def change_visited(trip)
