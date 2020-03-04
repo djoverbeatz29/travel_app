@@ -2,6 +2,7 @@ require_relative '../config/environment.rb'
 
 def login
     system "clear"
+    world_map
     prompt = TTY::Prompt.new
     resp = prompt.select("Welcome to the App! Please log in or create a new account.", ["Login", "Create Account", "Exit"])
     case resp
