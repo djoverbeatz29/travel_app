@@ -11,7 +11,7 @@ def find_user(user)
                 if resp == "Reviews"
                     if myuser.reviews.length > 0
                         print "Here are #{username}'s reviews:\n\n"
-                        myuser.reviews.each { |rev| print "Site: #{rev.site.name}\nRating: #{rev.rating} - #{rev.content }\n\n" }
+                        myuser.reviews.each { |rev| print "Site: #{rev.site.name}\nLocation: #{rev.site.destination.name}\nRating: #{rev.rating} - #{rev.content }\n\n" }
                     else
                         puts "#{username} has no reviews... yet!"
                     end
@@ -36,10 +36,8 @@ def find_user(user)
             end
         end
     end
-    resp = prompt.select("Options", ["Back", "Exit"])
+    resp = prompt.select("Options", ["Back"])
     if resp == "Back"
-        find_user(user)
-    else
         return
     end
 end
