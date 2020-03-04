@@ -99,7 +99,10 @@ end
 
 def add_site(user, destination)
     prompt = prompt_instance
-    site_name = prompt.ask("What is the name of the site?")
+    site_name = prompt.ask("What is the name of the site? Type 'exit' to cancel.")
+    if site_name.upcase == "EXIT"
+        return
+    end
     new_site = Site.create(name: site_name, destination: destination)
     user_input = prompt.select("Would you like to add a review for this site?", ["Yes", "No"])
     if user_input == "Yes"
@@ -316,6 +319,7 @@ def see_user_reviews(trip_destination, selected_user_id)
     # Site Name
     # Rating
     # Content
+    system "clear"
     prompt = prompt_instance
     user = User.find(selected_user_id)
     reviews = user.reviews.select {|review| review.site.destination == trip_destination}
