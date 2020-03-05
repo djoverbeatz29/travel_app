@@ -17,7 +17,7 @@ def add_trip(user)
                     destination = matches[0]
                     break
                 else
-                    resp = prompt.select("We found multiple matches for #{resp}. Select from the following list:", matches.map { |m| [m.name_with_country, m.id] }.to_h)
+                    resp = prompt.select("We found multiple matches for #{resp}. Select from the following list:", matches.map { |m| ["#{m.name}, #{m.subcountry}, #{m.country}", m.id] }.to_h)
                     destination = Destination.find(resp)
                     break
                 end
