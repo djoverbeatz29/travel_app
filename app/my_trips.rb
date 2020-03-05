@@ -83,6 +83,7 @@ def trip_menu(user, trip)
         edit_trip(trip)
     when "Delete"
         delete_trip_confirmation(user, trip)
+        return
     when "Back"
         return
     end
