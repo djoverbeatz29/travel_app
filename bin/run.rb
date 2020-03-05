@@ -54,7 +54,8 @@ def main_menu(user)
 end
 
 def make_username(name)
-    name.downcase.gsub(' ','')+(User.where(name: name).count+1).to_s
+    name_lower = name.downcase.gsub(' ','')
+    name_lower += (User.all.count { |user| user.name.downcase.gsub(' ', '') == name_lower } + 1).to_s
 end
 
 login
