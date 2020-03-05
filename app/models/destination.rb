@@ -4,7 +4,7 @@ class Destination < ActiveRecord::Base
     has_many :sites
 
     def name_with_country
-        "#{self.name}, #{self.country}"
+        "#{self.name}, #{self.subcountry}, #{self.country}"
     end
 
     def add_site(site_name)
