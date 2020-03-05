@@ -15,6 +15,7 @@ def add_trip(user)
                     puts "Invalid response."
                 elsif matches.length == 1
                     destination = matches[0]
+                    break
                 else
                     resp = prompt.select("We found multiple matches for #{resp}. Select from the following list:", matches.map { |m| [m.name_with_country, m.id] }.to_h)
                     destination = Destination.find(resp)
