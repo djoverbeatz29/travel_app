@@ -98,6 +98,7 @@ def determine_menu_options(trip)
 end
 
 def add_site(user, destination)
+    system "clear"
     prompt = prompt_instance
     site_name = prompt.ask("What is the name of the site? Type 'exit' to cancel.")
     if site_name.upcase == "EXIT"
@@ -111,6 +112,7 @@ def add_site(user, destination)
 end
 
 def browse_sites(user, trip)
+    system "clear"
     destination_sites = Site.where(destination: trip.destination)
     site_names = destination_sites.map{|site| site.name}
     site_names << "Back"
@@ -150,6 +152,7 @@ def add_site_review(user, selected_site)
 end
 
 def view_site_reviews(selected_site)
+    system "clear"
     prompt = prompt_instance
     selected_site.reviews.each do |review|
         prompt.say("User: #{review.user.name}")
