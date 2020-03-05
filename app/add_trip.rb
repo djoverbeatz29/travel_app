@@ -6,12 +6,20 @@ def add_trip(user)
     resp = prompt.select("Search by city or country, or click Exit to return to Main Menu", ["By City", "By Country", "Exit"])
     if resp == "By City"
         system "clear"
-        while resp = prompt.ask("Enter the name of the city you wish to visit: ")
-            if Destination.find_by(name: resp)
-                destination = Destination.find_by(name: resp)
+        while resp = prompt.ask("Enter the name of the city you wish to visit, or type 'cancel' to go back: ")
+            if resp == 'cancel'
                 break
             else
-                puts "Invalid response."
+                matches = Destination.where(name: resp)
+                if matches.length == 0
+                    puts "Invalid response."
+                elsif matches.length == 1
+                    destination = matches[0]
+                else
+                    resp = prompt.select("We found multiple matches for #{resp}. Select from the following list:", matches.map { |m| [m.name_with_country, m.id] }.to_h)
+                    destination = Destination.find(resp)
+                    break
+                end
             end
         end
 
@@ -23,7 +31,7 @@ def add_trip(user)
         nat = prompt.select("Choose your country.", nations.find_all { |n| n[0] == char })
         sub = prompt.select("Now choose your subcountry.", Destination.where(country: nat).map{ |c| c.subcountry }.uniq)
         city = prompt.select("Finally, choose your city.", Destination.where(country: nat, subcountry: sub).map{ |c| c.name }.uniq)
-        destination = Destination.find_by(name: city)
+        destination = Destination.find_by(name: city, subcountry: sub, country: nat)
     else
         return
     end
