@@ -29,7 +29,7 @@ def completed_trips(user)
     trip_destination_names["Back"] = "Back"
     prompt = prompt_instance
     prompt.say("Completed Trips")
-    trip_id = prompt.select("Select a trip to view", trip_destination_names)
+    trip_id = prompt.select("Select a trip to view", trip_destination_names, per_page: 10)
     if trip_id == "Back"
         return
     end
@@ -46,7 +46,7 @@ def wishlist(user)
     trip_destination_names["Back"] = "Back"
     prompt = prompt_instance
     prompt.say("Trip Wishlist")
-    trip_id = prompt.select("Select a trip to view", trip_destination_names)
+    trip_id = prompt.select("Select a trip to view", trip_destination_names, per_page: 10)
     if trip_id == "Back"
         return
     end

@@ -31,7 +31,7 @@ end
 def main_menu(user)
     system "clear"
     prompt = TTY::Prompt.new
-    input = prompt.select("Main Menu", ["Add Trip", "My Trips", "My Reviews", "Find User", "Log Out", "Change Password", "Delete Account"])
+    input = prompt.select("Main Menu", ["Add Trip", "My Trips", "My Reviews", "Find User", "Log Out", "Change Password", "Delete Account"], per_page: 10)
 
     case input
     when "Add Trip"
